@@ -1,17 +1,20 @@
 const express = require("express")
+const path = require('path');
 const urlRouter = require("./routes/url")
+const staticRouter = require("./routes/staticRoutes")
 const { dbConnection } = require("./config/db")
-const { handleURLRedirect } = require("./controllers/url")
-const { checkSchema} = require("express-validator")
-const querySchemaValidator = require("./validators/querySchemaValidator")
 const dotenv = require('dotenv');
 dotenv.config()
 
 const app = express()
+const PORT = process.env.PORT || 3000
+
+app.set("view engine", "ejs")
+app.set("views", path.resolve("./views"))
 
 app.use(express.json())
-
 app.use("/url", urlRouter)
+app.use("/", staticRouter)
 
 dbConnection("mongodb://localhost:27017/url_shortner")
   .then((res)=>{
@@ -20,10 +23,6 @@ dbConnection("mongodb://localhost:27017/url_shortner")
   .catch((err) => {
     console.log("Error while connecting to database:", err.message)
   })
-
-const PORT = process.env.PORT || 3000
-
-app.get('/:id', checkSchema(querySchemaValidator), handleURLRedirect)
 
 app.listen(PORT, ()=> {
     console.log("Server listening on port", PORT)
