@@ -1,0 +1,120 @@
+h1 {
+    width: 70%;
+    max-width: 500px;
+    text-align: center;
+    color: darkblue;
+}
+main{
+    min-height: 100%;
+    padding-top: 150px;
+}
+#url_form {
+    width: calc(70% + 15px);
+    max-width: 515px;
+}
+input, button {
+    margin: 5px;
+    padding: 10px;
+    outline: none;
+    border: 2px solid darkblue;
+    color: darkblue;
+    transition: 0.3s;
+}
+input {
+    width: calc(100% - 150px);
+}
+button {
+    background-color: darkblue;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: rgb(255, 255, 255);
+    color: darkblue;
+}
+::placeholder{
+    color: rgb(74, 74, 156);
+}
+input, button, ::placeholder {
+    font-family: Alexandria;
+    font-size: 13px;
+}
+#response, #errors {
+    width: 70%;
+    max-width: 500px;
+    font-size: 13px;
+    text-align: center;
+    border: 2px solid darkgreen;
+    border-radius: 5px;
+    background: #dafff3;
+    margin: 20px;
+    display: none;
+    position: relative;
+}
+#response {
+    padding-bottom: 22px;
+}
+#errors {
+    width: calc(70% - 40px);
+    max-width: 460px;
+    text-align: left;
+    border-color: maroon;
+    background-color: rgb(255, 220, 220);
+    padding: 10px 20px;
+}
+#errors p {
+    margin: 3px;
+}
+#copybtn {
+    padding: 3px;
+    border: 1px solid black;
+    background: white;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.data_ctnr {
+    width: 80%;
+    max-width: 660px;
+    border: 2px solid gainsboro;
+    margin: 30px auto;
+    margin-top: 10px;
+    background: white;
+    padding: 15px 0;
+    border-radius: 9px;
+}
+.data {
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+    display: flex;
+    font-size: 13px;
+    justify-content: space-between;
+}
+.data_index {
+    width: 55px;
+}
+.data_actualURL {
+    width: calc( 50% - 30px );
+}
+.data_createdURL {
+    width: calc( 50% - 25px );
+}
+header, nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+header {
+    background: aliceblue;
+    padding: 0;
+}
+.nav_btn {
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+nav img{
+    height: 45px;
+}

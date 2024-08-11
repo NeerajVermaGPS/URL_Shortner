@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="/styles/global.css">
+    <link rel="stylesheet" type="text/css" href="/styles/home.css">
+</head>
+<body>
+    <header class="fixed_00">
+        <nav>
+            <img src="/assets/logo.png" alt="">
+            <div>
+                <a href="/signup"><button class="nav_btn">Sign Up</button></a>
+                <a href="/signup"><button class="nav_btn">Login</button></a>
+            </div>
+        </nav>
+    </header>
+    <main class="center column full-w">
+        <h1>Madam URL Shortner</h1>
+        <form id="url_form" class="center">
+            <input type="text" name="url_data" id="url_data" placeholder="Enter URL">
+            <button type="submit">Shorten URL</button>
+        </form>
+        <div id="response">
+        </div>
+        <div id="errors"></div>
+        <h3 style="text-align: center; margin: 10px; margin-top: 30px;">Your previous URLs</h3>
+        <div class="data_ctnr">
+            <div class="data">
+                <div class="data_index">Sr. No.</div>
+                <div class="data_actualURL text_overflow">Redirection URL</div>
+                <div class="data_createdURL text_overflow">Shortened URL</div>
+            </div>
+            <% if (locals.urls && locals.urls.length > 0) { %>
+                <% urls.forEach((url, i) => { %>
+                    <hr style="width: 100%; border: 0.5px solid gainsboro;">
+                    <div class="data">
+                        <div class="data_index"><%= i + 1 %></div>
+                        <div class="data_actualURL text_overflow"><%= url.redirectURL %></div>
+                        <div class="data_createdURL text_overflow"><a href="http://localhost:3000/url/<%= url.shortId %>">http://localhost:3000/url/<%= url.shortId %></a></div>
+                    </div>
+                <% })} else { %>
+                    <div style="text-align: center;font-size: 15px;padding: 12px;color: red;">No previous data!</div>
+            <% } %>
+        </div>
+    </main>
+    <footer>
+        <div id="disclaimer" class="center full-w">© Neeraj Verma 2024</div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
+    <script>
+        const form = document.getElementById("url_form")
+        const url = document.getElementById("url_data")
+        const errors = document.getElementById("errors")
+        const response = document.getElementById("response")
+        
+        let prevURL = url.value
+        
+        const copyURL = async (e) => {
+          const copybtn = document.getElementById("copybtn")
+          var copyText = document.getElementById("link").textContent;
+          await navigator.clipboard.writeText(copyText);
+
+          copybtn.innerText = "URL Copied"
+        }
+
+        form.addEventListener("submit", (e)=>{
+            e.preventDefault()
+            if(url.value === prevURL) {
+                return;
+            }
+            errors.style.display = "none";
+            response.style.display = "none";
+            prevURL = url.value;
+
+            axios.post("http://localhost:3000/url", { redirectURL : url.value })
+                .then((res)=> {
+                    const urlEncoded = `http://localhost:3000/url/${res.data.id}`
+                    response.innerHTML = `<div id="copybtn" onclick="copyURL()">Copy URL</div><p>Your shortened URL is: <a href="${urlEncoded}" style="color: black;" id="link">${urlEncoded}</a></p>`;
+                    response.style.display = "block";
+                })
+                .catch((err)=> {
+                    errors.innerHTML = "Error occured: " + err.response.data.error.map(error => `<p>- ${error}</p>`).join("") || err.message;
+                    errors.style.display = "block";
+                })
+        })
+    </script>
+</body>
+</html>

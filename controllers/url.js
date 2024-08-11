@@ -2,7 +2,7 @@ const {matchedData} = require("express-validator")
 const {validationResult} = require("express-validator")
 const URL = require("../models/urls")
 const { generateShortId } = require("../utils/shortid")
-const { getDate } = require("../utils/date")
+const { getDateAndTime } = require("../utils/date")
 
 const handleURLGeneration = async (req, res) => {
     const result = validationResult(req)
@@ -34,7 +34,7 @@ const handleURLRedirect = async (req, res) => {
     const result = validationResult(req)
     const errors = result.errors.map(err => err.msg)
     if (result.isEmpty()){
-        const date = getDate()
+        const date = getDateAndTime()
         const shortId = matchedData(req).id
         try {
             const data = await URL.findOneAndUpdate({shortId}, {

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/styles/global.css">
+    <link rel="stylesheet" type="text/css" href="/styles/signup.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Sign Up</title>
+</head>
+<body>
+    <main class="full-hw center">
+        <div class="ctnr center row">
+            <div class="form_ctnr full-h center column">
+                <h2>Sign Up</h2>
+                <p>Start the exciting journey here</p>
+                <form id="signup_form" class="column">
+                    <div class="form_row">
+                        <input type="text" id="username" name="username" placeholder="Enter username" required>
+                    </div>
+                    <div class="form_row">
+                        <input type="email" id="email" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="form_row center">
+                        <span onclick="togglePassword('password')" class="pwi_ctnr center">
+                            <img src="/assets/pwsh.svg" alt="pw" class="pw_icon">
+                        </span>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    </div>
+                    <div class="form_row center">
+                        <span onclick="togglePassword('password2')" class="pwi_ctnr center">
+                            <img src="/assets/pwsh.svg" alt="pw" class="pw_icon">
+                        </span>
+                        <input type="password" id="password2" name="password2" placeholder="Re-enter password" required>
+                    </div>
+                    <div class="form_row center full-w">
+                        <button type="submit" id="form_btn">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div class="side_ctnr full-h center column">
+                <img src="/assets/logo.png" alt="logo" class="logo">
+                <h3>Already have an account?</h3>
+                <p>Log into your existing account and start from where you left.</p>
+                <div class="center full-w">
+                    <a href="/login"><button id="login_btn">Login</button></a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <aside>
+        <div class="toast">
+  
+            <div class="toast-content">
+              <img src="/assets/close.svg" class="check" id="toast_icon">
+              <div class="message">
+                <span class="text text-1" id="msg_title">Success</span>
+                <span class="text text-2" id="msg_msg">Your changes has been saved</span>
+              </div>
+            </div>
+            <img src="/assets/close.svg" class="close">
+            <div class="progress">
+                <div id="progress"></div>
+            </div>
+          </div>
+    </aside>
+    <script>
+        const form = document.getElementById("signup_form")
+        const username = document.getElementById("username")
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
+        const password2 = document.getElementById("password2")
+        const toast = document.querySelector(".toast");
+        const toast_icon = document.getElementById("toast_icon")
+        const msg_title = document.getElementById("msg_title")
+        const msg_msg = document.getElementById("msg_msg")
+        const closeIcon = document.querySelector(".close");
+        const progress = document.querySelector(".progress");
+
+        const togglePassword = (target) => {
+            const field = document.getElementById(target)
+            const icon = document.getElementById(target)
+            field.type === "text" ? field.type = "password" : field.type = "text"
+        }
+
+        form.addEventListener("submit", (e)=> {
+            e.preventDefault()
+            if(password.value !== password2.value) {
+                showToast("Error", "Password does not match!", "#02a89a")
+                password2.focus()
+                return;
+            }
+            const data = {
+                username: username.value,
+                email: email.value,
+                password: password.value
+            }
+            axios.post("http://localhost:3000/user/", data)
+              .then((res) => {
+                form.reset();
+                showToast("Success", "You are registered succesfully!", "#c34787")
+            })
+            .catch((err) => {
+                console.log(err)
+                const error = err.code === "ERR_NETWORK" ? "Network error occured!" : err.response.data.error.map(e => `<p>- ${e}</p>`).join("")
+                showToast("Error", error, "#02a89a")
+              })
+        })
+
+        let timer1, timer2;
+
+        const showToast = (title, msg, color) => {
+          const beforeEl = document.getElementById("progress");
+          beforeEl.style.background = color;
+          toast.classList.add("active");
+          progress.classList.add("active");
+          toast_icon.style.background = color;
+          msg_title.innerText = title;
+          msg_msg.innerHTML = msg;
+
+          color === "#c34787" ? toast_icon.src = "/assets/check.svg" : toast_icon.src = "/assets/close.svg"
+        
+          timer1 = setTimeout(() => {
+            toast.classList.remove("active");
+          }, 5000); 
+      
+          timer2 = setTimeout(() => {
+            progress.classList.remove("active");
+          }, 5300);
+        };
+
+        closeIcon.addEventListener("click", () => {
+          toast.classList.remove("active");
+        
+          setTimeout(() => {
+            progress.classList.remove("active");
+          }, 300);
+      
+          clearTimeout(timer1);
+          clearTimeout(timer2);
+        });
+    </script>
+</body>
+</html>
