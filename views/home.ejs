@@ -8,12 +8,16 @@
     <link rel="stylesheet" type="text/css" href="/styles/home.css">
 </head>
 <body>
-    <header class="fixed_00">
+    <header class="center fixed_00">
         <nav>
             <img src="/assets/logo.png" alt="">
             <div>
-                <a href="/signup"><button class="nav_btn">Sign Up</button></a>
-                <a href="/login"><button class="nav_btn">Login</button></a>
+                <% if (locals.name) { %>
+                    <div id="username" class="center">Hii, <%= name %>!</div>
+                <% } else { %>
+                    <a href="/signup"><button class="nav_btn">Sign Up</button></a>
+                    <a href="/login"><button class="nav_btn">Login</button></a>
+                <% } %>
             </div>
         </nav>
     </header>

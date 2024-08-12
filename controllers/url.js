@@ -46,6 +46,7 @@ const handleURLRedirect = async (req, res) => {
                     }
                 }
             })
+            console.log(data)
             return res.redirect(data.redirectURL)
         } catch(err) {
             return res.status(404).json({ error : ["URL not found!"] })

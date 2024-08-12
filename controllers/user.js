@@ -1,14 +1,13 @@
 const User = require("../models/users")
 const { validationResult, matchedData } = require("express-validator")
 const { hashPassword, comparePassword } = require("../utils/hashing")
-const {v4: uuidv4} = require("uuid")
 const { setUser } = require('../services/auth')
 
 const handleSignupUser = async (req, res) => {
     const result = validationResult(req)
     const errors = result.errors.map(err => err.msg)
     if(result.isEmpty()) {
-        const data = matchedData(req)
+        const data = matchedData(req) 
         const user = await User.findOne({username: data.username}) || await User.findOne({email: data.email})
         if(user) return res.status(400).json({error: ["Username or email already exists!"]})
         data.password = hashPassword(data.password)
@@ -46,10 +45,10 @@ const handleLoginUser = async (req, res) => {
             const findUser = await User.findOne({username : data.username})
             if(!findUser) throw new Error("User not found!")
             if(!comparePassword(data.password, findUser.password)) throw new Error("Username or password is wrong!")
-            const sessionId = uuidv4()
-            res.cookie("uid", sessionId)
-            setUser(sessionId, {id: findUser._id, username: findUser.username, email: findUser.email, createdAt: Date.now()})
-            return res.sendStatus(200);
+            const token = setUser({id: findUser._id, username: findUser.username, email: findUser.email, createdAt: Date.now()})
+            // res.cookie("uid", token)
+            // return res.sendStatus(200);
+            return res.json({token});
         } catch(err) {
             return res.status(400).json({error: [err.message]})
         }

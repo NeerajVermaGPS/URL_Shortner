@@ -86,6 +86,7 @@
               .then((res) => {
                 form.reset();
                 showToast("Success", "Logging you in!", "#c34787")
+                document.cookie = `uid=${res.data.token}`
                 setTimeout(() => {window.location.replace(`http://localhost:3000${returnTo}`)}, 2000)
             })
             .catch((err) => {
