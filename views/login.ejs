@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/styles/global.css">
     <link rel="stylesheet" type="text/css" href="/styles/signup.css">
+    <link rel="stylesheet" type="text/css" href="/styles/login.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Sign Up</title>
+    <title>Login</title>
 </head>
 <body>
     <main class="full-hw center">
         <div class="ctnr center row">
+            <div class="side_ctnr full-h center column">
+                <img src="/assets/logo.png" alt="logo" class="logo">
+                <h3>Don't have an account?</h3>
+                <p>Sign up today and start the exciting journey with some short stuff.</p>
+                <div class="center full-w">
+                    <a href="/signup"><button id="login_btn">Sign Up</button></a>
+                </div>
+            </div>
             <div class="form_ctnr full-h center column">
-                <h2>Sign Up</h2>
-                <p>Start the exciting journey here</p>
-                <form id="signup_form" class="column">
+                <h2>Login</h2>
+                <p>Login to start from where you left.</p>
+                <form id="login_form" class="column">
                     <div class="form_row">
                         <input type="text" id="username" name="username" placeholder="Enter username" required>
-                    </div>
-                    <div class="form_row">
-                        <input type="email" id="email" name="email" placeholder="Enter email" required>
                     </div>
                     <div class="form_row center">
                         <span onclick="togglePassword('password')" class="pwi_ctnr center">
@@ -28,24 +34,10 @@
                         </span>
                         <input type="password" id="password" name="password" placeholder="Enter password" required>
                     </div>
-                    <div class="form_row center">
-                        <span onclick="togglePassword('password2')" class="pwi_ctnr center">
-                            <img src="/assets/pwsh.svg" alt="pw" class="pw_icon">
-                        </span>
-                        <input type="password" id="password2" name="password2" placeholder="Re-enter password" required>
-                    </div>
                     <div class="form_row center full-w">
-                        <button type="submit" id="form_btn">Sign Up</button>
+                        <button type="submit" id="form_btn">Login</button>
                     </div>
                 </form>
-            </div>
-            <div class="side_ctnr full-h center column">
-                <img src="/assets/logo.png" alt="logo" class="logo">
-                <h3>Already have an account?</h3>
-                <p>Log into your existing account and start from where you left.</p>
-                <div class="center full-w">
-                    <a href="/login"><button id="login_btn">Login</button></a>
-                </div>
             </div>
         </div>
     </main>
@@ -66,11 +58,9 @@
           </div>
     </aside>
     <script>
-        const form = document.getElementById("signup_form")
+        const form = document.getElementById("login_form")
         const username = document.getElementById("username")
-        const email = document.getElementById("email")
         const password = document.getElementById("password")
-        const password2 = document.getElementById("password2")
         const toast = document.querySelector(".toast");
         const toast_icon = document.getElementById("toast_icon")
         const msg_title = document.getElementById("msg_title")
@@ -86,21 +76,17 @@
 
         form.addEventListener("submit", (e)=> {
             e.preventDefault()
-            if(password.value !== password2.value) {
-                showToast("Error", "Password does not match!", "#02a89a")
-                password2.focus()
-                return;
-            }
+            const url = new URL(window.location.href);
+            const returnTo = url.searchParams.get('returnTo') || "/";
             const data = {
                 username: username.value,
-                email: email.value,
                 password: password.value
             }
-            axios.post("http://localhost:3000/user/signup", data)
+            axios.post(`http://localhost:3000/user/login`, data)
               .then((res) => {
                 form.reset();
-                showToast("Success", "You are registered succesfully! Redirecting you to login page!", "#c34787")
-                setTimeout(() => {window.location.replace(`http://localhost:3000/login`)}, 2000)
+                showToast("Success", "Logging you in!", "#c34787")
+                setTimeout(() => {window.location.replace(`http://localhost:3000${returnTo}`)}, 2000)
             })
             .catch((err) => {
                 console.log(err)

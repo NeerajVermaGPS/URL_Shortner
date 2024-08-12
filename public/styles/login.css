@@ -1,0 +1,6 @@
+.ctnr {
+    background-image: linear-gradient(-50deg, rgb(8, 8, 82), rgb(0 0 20) 86%);
+}
+.form_ctnr {
+    border-radius: 5px 0 0 5px;
+}

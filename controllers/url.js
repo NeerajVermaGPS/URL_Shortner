@@ -14,7 +14,8 @@ const handleURLGeneration = async (req, res) => {
             await URL.create({
                 shortId: shortId,
                 redirectURL: data.redirectURL,
-                visitHistory: []
+                visitHistory: [],
+                createdBy: req.user.id
             })
             return res.status(201).json({ id: shortId })
         } catch(e) {
@@ -22,7 +23,8 @@ const handleURLGeneration = async (req, res) => {
             await URL.create({
                 shortId: shortId,
                 redirectURL: data.redirectURL,
-                visitHistory: []
+                visitHistory: [],
+                createdBy: req.user.id
             })
             return res.status(201).json({ id: shortId })
         }

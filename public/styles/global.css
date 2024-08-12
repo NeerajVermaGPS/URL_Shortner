@@ -14,6 +14,22 @@ html {
 * {
   box-sizing: border-box;
 }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: darkblue;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #001f5e;
+}
 img {
   -webkit-user-drag: none;
 }

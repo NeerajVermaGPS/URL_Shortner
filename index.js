@@ -5,6 +5,8 @@ const staticRouter = require("./routes/staticRoutes")
 const userRouter = require("./routes/user")
 const { dbConnection } = require("./config/db")
 const dotenv = require('dotenv');
+const cookieParser = require("cookie-parser")
+const { validateLoggedUser } = require("./middlewares/authMiddleware")
 dotenv.config()
 
 const app = express()
@@ -15,7 +17,8 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.set("views", path.resolve("./views"))
 
 app.use(express.json())
-app.use("/url", urlRouter)
+app.use(cookieParser())
+app.use("/url", validateLoggedUser, urlRouter)
 app.use("/", staticRouter)
 app.use("/user", userRouter)
 
