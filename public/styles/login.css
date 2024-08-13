@@ -4,3 +4,23 @@
 .form_ctnr {
     border-radius: 5px 0 0 5px;
 }
+
+@media only screen and (max-width: 600px) {
+    main {
+        align-items: start !important;
+        padding: 90px 0;
+        height: fit-content !important;
+    }
+    .ctnr {
+        flex-direction: column-reverse !important;
+        width: 90%;
+        max-width: 340px;
+    }
+    .form_ctnr {
+        min-height: auto !important;
+        border-radius: 0 0 5px 5px;
+    }
+    .ctnr div {
+        width: 100% !important;
+    }
+}

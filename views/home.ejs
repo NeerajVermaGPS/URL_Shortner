@@ -8,16 +8,24 @@
     <link rel="stylesheet" type="text/css" href="/styles/home.css">
 </head>
 <body>
-    <header class="center fixed_00">
+    <header class="main-header center fixed_00">
         <nav>
-            <img src="/assets/logo.png" alt="">
-            <div>
-                <% if (locals.name) { %>
-                    <div id="username" class="center">Hii, <%= name %>!</div>
-                <% } else { %>
-                    <a href="/signup"><button class="nav_btn">Sign Up</button></a>
-                    <a href="/login"><button class="nav_btn">Login</button></a>
-                <% } %>
+            <img src="/assets/logo.png" class="nav-logo" alt="logo">
+            <div class="center row">
+                <div class="menu-nav-ico center column">
+                    <span class="menu-line"></span>
+                    <span class="menu-line"></span>
+                    <span class="menu-line"></span>
+                </div>
+                <div class="main-nav center row">
+                    <% if (locals.name) { %>
+                        <div id="username" class="center">Hii, <%= name %>!</div>
+                        <button class="nav_btn" id="logout">Logout</button>
+                    <% } else { %>
+                        <a href="/signup"><button class="nav_btn">Sign Up</button></a>
+                        <a href="/login"><button class="nav_btn">Login</button></a>
+                    <% } %>
+                </div>
             </div>
         </nav>
     </header>
@@ -34,16 +42,20 @@
         <div class="data_ctnr">
             <div class="data">
                 <div class="data_index">Sr. No.</div>
-                <div class="data_actualURL text_overflow">Redirection URL</div>
-                <div class="data_createdURL text_overflow">Shortened URL</div>
+                <div class="data_urlCtnr">
+                    <div class="text_overflow">Redirection URL</div>
+                    <div class="text_overflow">Shortened URL</div>
+                </div>
             </div>
             <% if (locals.urls && locals.urls.length > 0) { %>
                 <% urls.forEach((url, i) => { %>
                     <hr style="width: 100%; border: 0.5px solid gainsboro;">
                     <div class="data">
                         <div class="data_index"><%= i + 1 %></div>
-                        <div class="data_actualURL text_overflow"><%= url.redirectURL %></div>
-                        <div class="data_createdURL text_overflow"><a href="http://localhost:3000/u/<%= url.shortId %>">http://localhost:3000/u/<%= url.shortId %></a></div>
+                        <div class="data_urlCtnr">
+                            <div class="text_overflow"><%= url.redirectURL %></div>
+                            <div class="text_overflow"><a href="http://localhost:3000/u/<%= url.shortId %>">http://localhost:3000/u/<%= url.shortId %></a></div>
+                        </div>
                     </div>
                 <% })} else { %>
                     <div style="text-align: center;font-size: 15px;padding: 12px;color: red;"><%= locals.message %></div>
@@ -56,10 +68,16 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
     <script>
+        const menuIcon = document.querySelector(".menu-nav-ico");
+        const menuNav = document.querySelector(".main-nav");
+        const menuHeader = document.querySelector(".main-header");
+        const navLinks = document.querySelectorAll(".menu-line");
+        const logo = document.querySelector(".nav-logo");
         const form = document.getElementById("url_form")
         const url = document.getElementById("url_data")
         const errors = document.getElementById("errors")
         const response = document.getElementById("response")
+        const logout_btn = document.getElementById("logout")
         
         let prevURL = url.value
         
@@ -70,6 +88,15 @@
 
           copybtn.innerText = "URL Copied"
         }
+
+        menuIcon.addEventListener("click", function () {
+          for(let i = 0; i < 3; i++){
+            navLinks[i].classList.toggle("animateMenu");
+          }
+          menuNav.classList.toggle("mnheight");
+          menuHeader.classList.toggle("mhbg");
+          logo.classList.toggle("animate-logo-img");
+        })
 
         form.addEventListener("submit", (e)=>{
             e.preventDefault()
@@ -95,6 +122,19 @@
                     errors.style.display = "block";
                 })
         })
+
+        if(logout_btn) {
+            logout_btn.addEventListener("click", () => {
+                axios.post("http://localhost:3000/user/logout")
+                    .then((res)=> {
+                        window.location.reload();
+                    })
+                    .catch((err)=> {
+                        errors.innerHTML = "Error occured: " + err.response.data.error.map(error => `<p>- ${error}</p>`).join("") || err.message;
+                        errors.style.display = "block";
+                    })
+            })
+        }
     </script>
 </body>
 </html>

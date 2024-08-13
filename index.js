@@ -6,7 +6,7 @@ const userRouter = require("./routes/user")
 const { dbConnection } = require("./config/db")
 const dotenv = require('dotenv');
 const cookieParser = require("cookie-parser")
-const { validateLoggedUser } = require("./middlewares/authMiddleware")
+const { validateLoggedUser, restrictAccessTo } = require("./middlewares/authMiddleware")
 dotenv.config()
 
 const app = express()
@@ -18,7 +18,8 @@ app.set("views", path.resolve("./views"))
 
 app.use(express.json())
 app.use(cookieParser())
-app.use("/url", validateLoggedUser, urlRouter)
+app.use(validateLoggedUser)
+app.use("/url", restrictAccessTo(["NORMAL",  "ADMIN"]), urlRouter)
 app.use("/", staticRouter)
 app.use("/user", userRouter)
 
